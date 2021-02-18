@@ -1,0 +1,15 @@
+body {
+   background-color: #6CA7E6;
+}
+
+.editor {
+   background-color: #DFECFA;
+}
+
+.preview {
+   background-color: #DFECFA;
+}
+
+textarea, .preview {
+   min-height: 400px;
+}

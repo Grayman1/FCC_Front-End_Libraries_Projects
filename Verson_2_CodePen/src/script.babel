@@ -1,0 +1,96 @@
+const onLoadState = `
+**Bolded text Example**
+
+**This is bolded text**
+
+**H1 header**
+
+# Programmed by Grayman1
+
+**H2 sub-header**
+
+## Build a Markdown Previewer
+
+**Link Example**
+
+[Learn more about programming at FreeCodeCamp](http://freeecodecamp.org)
+
+**Image Example**
+
+![alt text](https://github.com/adam-p/markdown-here/raw/master/src/common/images/icon48.png "Logo Title Text 1")
+
+**Blockquote example**
+> Run for an elected position.
+
+** List element example**
+<dl>
+  <dt>Definition list</dt>
+  <dd>Is something people use sometimes.</dd>
+
+  <dt>Markdown in HTML</dt>
+  <dd>Does *not* work **very** well. Use HTML <em>tags</em>.</dd>
+</dl>
+
+**Inline code example**
+
+\`Thank you for visiting\`
+
+**Code block example**
+
+\`\`\`
+<html>
+  <head>
+  </head>
+</html>
+\`\`\`
+
+**Unordered list example**
+
+- Code
+- All 
+- Day
+**Blockquote example**
+
+> Blockquotes are very handy in email to emulate reply text.
+> This line is part of the same quote.
+Quote break.
+
+
+`
+
+class App extends React.Component {
+   state = {
+      markText: onLoadState
+   }
+   
+   handleChange = (e) => {
+      this.setState ({
+         markText: e.target.value
+      })
+   }
+   
+  render() {
+     const {markText} = this.state;
+     
+     const markdown = marked(markText, {breaks:true});
+           
+     
+    return(
+      <div>
+         <h2 className="text-center m-3">A Simple Markdown Previewer</h2>
+         <div className="row">
+            <div className="col-6">
+               <h5 className="text-center">Enter Your Markdown Below:</h5>
+               <textarea className="form-control editor rounded p-2" id="editor" value={markText} onChange={this.handleChange} />
+            </div>
+            <div className="col-6" >
+                <h5 className="text-center">View Converted Markdown Below:</h5>
+               <div id="preview" className="preview rounded p-2" dangerouslySetInnerHTML={{__html: markdown}}/>
+            </div>
+         </div>
+      </div>
+  );
+  }
+}
+
+ReactDOM.render(<App/>, document.getElementById('app'))
