@@ -1,0 +1,177 @@
+const sounds = [
+{
+  letter: "Q",
+  keyCode: 81,
+  soundID: "Heater-1",
+  url: 'https://s3.amazonaws.com/freecodecamp/drums/Heater-1.mp3' },
+
+{
+  letter: "W",
+  keyCode: 87,
+  soundID: "Heater-2",
+  url: 'https://s3.amazonaws.com/freecodecamp/drums/Heater-2.mp3' },
+
+{
+  letter: "E",
+  keyCode: 69,
+  soundID: "Heater-3",
+  url: 'https://s3.amazonaws.com/freecodecamp/drums/Heater-3.mp3' },
+
+{
+  letter: "A",
+  keyCode: 65,
+  soundID: "Heater-4_1",
+  url: 'https://s3.amazonaws.com/freecodecamp/drums/Heater-4_1.mp3' },
+
+{
+  letter: "S",
+  keyCode: 83,
+  soundID: "Heater-6",
+  url: 'https://s3.amazonaws.com/freecodecamp/drums/Heater-6.mp3' },
+
+{
+  letter: "D",
+  keyCode: 68,
+  soundID: "Dsc_Oh",
+  url: 'https://s3.amazonaws.com/freecodecamp/drums/Dsc_Oh.mp3' },
+
+{
+  letter: "Z",
+  keyCode: 90,
+  soundID: "Kick_n_Hat",
+  url: 'https://s3.amazonaws.com/freecodecamp/drums/Kick_n_Hat.mp3' },
+
+{
+  letter: "X",
+  keyCode: 88,
+  soundID: "RP4_KICK_1",
+  url: 'https://s3.amazonaws.com/freecodecamp/drums/RP4_KICK_1.mp3' },
+
+{
+  letter: "C",
+  keyCode: 67,
+  soundID: "Cev_H2",
+  url: 'https://s3.amazonaws.com/freecodecamp/drums/Cev_H2.mp3' }];
+
+
+
+// New code 
+const active = {
+  //background: 'blue',
+  color: 'blue',
+  fontWeight: 'bold',
+  boxShadow: "0px 5px 25px 0px gold" };
+
+
+const inactive = {
+  // color: 'black',
+  boxShadow: '0px 3px 15px 0px rgba(0,0,0,0.5)' };
+
+
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      display: "Play a Sound..." };
+
+    this.updateDisplay = this.updateDisplay.bind(this);
+  }
+  updateDisplay(text) {
+    this.setState({
+      display: text });
+
+  }
+  render() {
+    return /*#__PURE__*/(
+      React.createElement("div", { id: "drum-machine" }, /*#__PURE__*/
+      React.createElement(Display, { id: "display", drumType: this.state.display }), /*#__PURE__*/
+      React.createElement(DrumPad, { updateDisplay: this.updateDisplay })));
+
+
+  }}
+
+
+class DrumPad extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+  render() {
+    let soundPlayed = sounds.map((drumObj, i, soundsArr) => {
+      return /*#__PURE__*/(
+        React.createElement(Drum, {
+          keyCode: soundsArr[i].keyCode,
+          drumType: soundsArr[i].soundID,
+          letter: soundsArr[i].letter,
+          url: soundsArr[i].url,
+          updateDisplay: this.props.updateDisplay }));
+
+    });
+    return /*#__PURE__*/(
+      React.createElement("div", { id: "drums-container" },
+      soundPlayed));
+
+
+  }}
+
+
+class Drum extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      padStatus: inactive };
+
+
+    this.handleKeyPress = this.handleKeyPress.bind(this);
+    this.playSound = this.playSound.bind(this);
+  }
+  componentDidMount() {
+    document.addEventListener('keydown', this.handleKeyPress);
+  }
+  componentWillUnmount() {
+    document.removeEventListener('keydown', this.handleKeyPress);
+  }
+
+  handleKeyPress(e) {
+    if (e.keyCode === this.props.keyCode) {
+      this.playSound();
+      this.setState({
+        padStatus: active });
+
+      setTimeout(() => {
+        this.setState({
+          padStatus: inactive });}, 200);
+    }
+  }
+  playSound(e) {
+    const sound = document.getElementById(this.props.letter);
+    console.log(this.props.letter, sound);
+    sound.currentTime = 0;
+    sound.play();
+
+    this.props.updateDisplay(this.props.drumType);
+
+  }
+
+  render() {
+    return /*#__PURE__*/(
+      React.createElement("div", { className: "drum-pad",
+        id: this.props.drumType,
+        onClick: this.playSound,
+        style: this.state.padStatus }, /*#__PURE__*/
+      React.createElement("audio", { className: "clip", id: this.props.letter,
+        src: this.props.url }),
+      this.props.letter));
+
+
+  }}
+
+
+const Display = props => {
+  return /*#__PURE__*/(
+    React.createElement("div", { id: "display" },
+    props.drumType));
+
+
+};
+
+ReactDOM.render( /*#__PURE__*/React.createElement(App, null), document.getElementById('main'));
